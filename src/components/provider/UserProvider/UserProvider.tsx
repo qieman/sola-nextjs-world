@@ -1,4 +1,4 @@
-import {ReactNode, useContext, useEffect, useState} from 'react'
+import {ReactNode, useContext, useEffect, useState, useRef} from 'react'
 import {useAccount, useDisconnect, useWalletClient} from 'wagmi'
 import UserContext from './UserContext'
 import DialogsContext from '../DialogProvider/DialogsContext'
@@ -12,6 +12,13 @@ import useSafePush from "@/hooks/useSafePush";
 import {WalletContext as solanaWalletContext} from '@solana/wallet-adapter-react'
 import fetch from "@/utils/fetch";
 import {createSignInMessage} from '@solana/wallet-standard-util';
+
+const MiniKitLib = require('@worldcoin/minikit-js')
+
+console.log('MiniKitLib', MiniKitLib)
+
+// import {MiniKit, ResponseEvent} from '@worldcoin/minikit-js'
+
 // import { useProfile as useFarcasterProfile, useSignInMessage, useSignIn } from '@farcaster/auth-kit';
 
 
@@ -58,6 +65,8 @@ const emptyUser: User = {
     far_address: null
 }
 
+let worldIdNonce : null | number = null;
+
 function UserProvider(props: UserProviderProps) {
     const [userInfo, setUserInfo] = useState<User>(emptyUser)
     const {address, isConnecting, isDisconnected, connector} = useAccount()
@@ -72,6 +81,8 @@ function UserProvider(props: UserProviderProps) {
     // const {isAuthenticated, profile } = useFarcasterProfile()
     // const { signature, message } = useSignInMessage()
     // const { signOut } = useSignIn({})
+
+
 
     const setUser = (data: Partial<Record<keyof User, any>>) => {
         const copyUserInfo = {...userInfo, ...data}
@@ -235,6 +246,72 @@ function UserProvider(props: UserProviderProps) {
         await setProfile({authToken: authToken})
         setAuth(address, authToken)
     }
+
+    const minikitLogin = async () => {
+        console.log('Login ...')
+        console.log('Login type: ', 'world id')
+
+        if (!MiniKitLib.MiniKit.isInstalled()) {
+            showToast('WorldID not installed', 3000)
+            return
+        }
+
+        let authToken = AuthStorage.getAuth(address)?.authToken
+        if (!authToken) {
+            const unloading = showLoading()
+            try {
+                const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
+                const nonce: any = res.data.nonce + '';
+                worldIdNonce = nonce
+                const domain = window.location.host
+                const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
+                    nonce: nonce,
+                    expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+                    notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                    statement:
+                        `${domain} wants you to sign in with your World ID account:`,
+                });
+                console.log('New token: ', authToken)
+            } catch (e) {
+                console.error(e)
+                showToast('Login fail', 3000)
+                logOut()
+                return
+            } finally {
+                unloading()
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (!MiniKitLib.MiniKit.isInstalled()) {
+            return;
+        }
+
+        MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
+            if (payload.status === "error") {
+                throw new Error('WorldID login failed');
+            } else {
+               console.log(payload)
+                const response: any = await fetch.post({
+                    url: "/api/zupass",
+                    data: {payload, nonce: worldIdNonce}
+                });
+
+                if (response.status === 200) {
+                    const res = response.data
+                    await setProfile({authToken: res.auth_token})
+                    setAuth(res.address, res.auth_token)
+                } else {
+                    throw new Error("Authentication failed");
+                }
+            }
+        });
+
+        return () => {
+            MiniKitLib.MiniKit.unsubscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth);
+        };
+    }, []);
 
     const phoneLogin = async () => {
         const loginType = AuthStorage.getLastLoginType()
@@ -406,7 +483,7 @@ function UserProvider(props: UserProviderProps) {
 
     return (
         <UserContext.Provider
-            value={{user: userInfo, setUser, logOut, emailLogin, walletLogin, phoneLogin, zupassLogin}}>
+            value={{user: userInfo, setUser, logOut, emailLogin, walletLogin, phoneLogin, zupassLogin, minikitLogin}}>
             {props.children}
         </UserContext.Provider>
     )

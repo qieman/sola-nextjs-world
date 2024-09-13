@@ -4,7 +4,6 @@ import 'swiper/css'
 import NextNProgress from 'nextjs-progressbar';
 import Script from 'next/script'
 import Layout from "@/components/Layout/Layout";
-import fetch from "@/utils/fetch";
 
 // providers
 import LangProvider from "@/components/provider/LangProvider/LangProvider"
@@ -14,7 +13,7 @@ import UserProvider from "@/components/provider/UserProvider/UserProvider";
 import theme from "@/theme"
 import {Provider as StyletronProvider} from 'styletron-react'
 import {BaseProvider} from 'baseui'
-import {avalancheFuji, polygon, mainnet, optimism, base, arbitrum} from 'wagmi/chains'
+import {arbitrum, avalancheFuji, base, mainnet, optimism, polygon} from 'wagmi/chains'
 import {InjectedConnector} from 'wagmi/connectors/injected'
 import {publicProvider} from 'wagmi/providers/public'
 import {configureChains, createConfig, WagmiConfig} from 'wagmi'
@@ -24,9 +23,9 @@ import MapProvider from "@/components/provider/MapProvider/MapProvider";
 import EventHomeProvider from "@/components/provider/EventHomeProvider/EventHomeProvider";
 import ColorSchemeProvider from "@/components/provider/ColorSchemeProvider";
 import Subscriber from '@/components/base/Subscriber'
-import {JoyIdConnector} from '@/libs/joid'
 import NotificationsProvider from "@/components/provider/NotificationsProvider/NotificationsProvider";
 import {SolanaWalletProvider} from '@/components/provider/SolanaWalletProvider/SolanaWalletProvider'
+import MiniKitProvider from "@/components/provider/MiniKitProvider/MiniKitProvider";
 
 import '@farcaster/auth-kit/styles.css';
 // import { AuthKitProvider } from '@farcaster/auth-kit';
@@ -80,7 +79,7 @@ function MyApp({Component, pageProps, ...props}: any) {
 
     return (
         <>
-            <Script src="/analyse/rollbar.js" />
+            <Script src="/analyse/rollbar.js"/>
             <PageBacProvider>
                 <Head>
                     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
@@ -98,23 +97,25 @@ function MyApp({Component, pageProps, ...props}: any) {
                             <StyletronProvider value={styletron}>
                                 <BaseProvider theme={theme}>
                                     <DialogProvider>
-                                        <MapProvider>
-                                        <UserProvider>
-                                            <LangProvider>
-                                                <DialogProvider>
-                                                        <EventHomeProvider>
-                                                            <NotificationsProvider>
-                                                                <DisplayLay>
-                                                                    <NextNProgress options={{showSpinner: false}}/>
-                                                                    <Component {...pageProps} />
-                                                                    <Subscriber/>
-                                                                </DisplayLay>
-                                                            </NotificationsProvider>
-                                                        </EventHomeProvider>
-                                                </DialogProvider>
-                                            </LangProvider>
-                                        </UserProvider>
-                                        </MapProvider>
+                                        <MiniKitProvider>
+                                            <MapProvider>
+                                                <UserProvider>
+                                                    <LangProvider>
+                                                        <DialogProvider>
+                                                            <EventHomeProvider>
+                                                                <NotificationsProvider>
+                                                                    <DisplayLay>
+                                                                        <NextNProgress options={{showSpinner: false}}/>
+                                                                        <Component {...pageProps} />
+                                                                        <Subscriber/>
+                                                                    </DisplayLay>
+                                                                </NotificationsProvider>
+                                                            </EventHomeProvider>
+                                                        </DialogProvider>
+                                                    </LangProvider>
+                                                </UserProvider>
+                                            </MapProvider>
+                                        </MiniKitProvider>
                                     </DialogProvider>
                                 </BaseProvider>
                             </StyletronProvider>

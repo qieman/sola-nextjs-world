@@ -10,6 +10,8 @@ import {useRouter} from 'next/navigation'
 import useZuAuth from '@/service/zupass/useZuAuth'
 import {Spinner} from "baseui/icon";
 
+const MiniKitLib = require('@worldcoin/minikit-js')
+
 interface DialogConnectWalletProps {
     handleClose: (...rest: any[]) => any
 }
@@ -48,7 +50,7 @@ function DialogConnectWallet(props: DialogConnectWalletProps) {
     const {isDisconnected} = useAccount()
     const router = useRouter()
     const {clean, showLoading, showToast} = useContext(DialogsContext)
-    const {user, logOut, setUser} = useContext(UserContext)
+    const {user, logOut, setUser, minikitLogin} = useContext(UserContext)
     //  const solanaWallet: any = useContext(solanaWalletContext)
     const zuAuthLogin = useZuAuth()
 
@@ -164,6 +166,13 @@ function DialogConnectWallet(props: DialogConnectWalletProps) {
                     <img src="/images/phone_login.png" alt="email"/>
                     <div className='connect-name'>Phone</div>
                 </div>
+            }
+
+            {
+            <div className={`connect-item ${MiniKitLib.MiniKit.isInstalled() ? '' : 'disable'}`} onClick={minikitLogin}>
+                <img src="https://ik.imagekit.io/soladata/th7yl4e7_DnPjjT8n1" alt="World ID"/>
+                <div className='connect-name'>World ID</div>
+            </div>
             }
 
 
