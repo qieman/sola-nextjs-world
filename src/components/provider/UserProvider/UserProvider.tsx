@@ -294,7 +294,7 @@ function UserProvider(props: UserProviderProps) {
             } else {
                console.log(payload)
                 const response: any = await fetch.post({
-                    url: "/api/zupass",
+                    url: "/api/worldid/verify",
                     data: {payload, nonce: worldIdNonce}
                 });
 
