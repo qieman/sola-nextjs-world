@@ -290,6 +290,7 @@ function UserProvider(props: UserProviderProps) {
 
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
+                alert('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
                console.log(payload)
