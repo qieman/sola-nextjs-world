@@ -294,6 +294,7 @@ function UserProvider(props: UserProviderProps) {
                 showToast('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
+                const unload = showLoading()
                 try {
                     console.log(payload)
                     const response: any = await fetch.post({
@@ -305,10 +306,12 @@ function UserProvider(props: UserProviderProps) {
                         const res = response.data
                         await setProfile({authToken: res.auth_token})
                         setAuth(res.address, res.auth_token)
+                        unload()
                     } else {
                         throw new Error(response.data.message || "Authentication failed");
                     }
                 } catch (e: any) {
+                    unload()
                     showToast(e.message)
                 }
             }
