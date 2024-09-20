@@ -296,7 +296,6 @@ function UserProvider(props: UserProviderProps) {
             } else {
                 try {
                     console.log(payload)
-                    showToast('7')
                     const response: any = await fetch.post({
                         url: "/api/worldid/verify",
                         data: {payload, nonce: worldIdNonce}

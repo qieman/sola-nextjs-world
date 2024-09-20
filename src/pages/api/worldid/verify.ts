@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next/dist/shared/lib/utils";
-// import { MiniAppWalletAuthSuccessPayload, verifySiweMessage } from "@worldcoin/minikit-js";
+import { MiniAppWalletAuthSuccessPayload, verifySiweMessage,  } from "@worldcoin/minikit-js";
 import {solanaLogin} from "@/service/solas";
 
 const MiniKitLib = require('@worldcoin/minikit-js')
@@ -32,5 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             address: null,
             auth_token: null
         });
+        throw new Error(error);
     }
 }
