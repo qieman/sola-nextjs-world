@@ -264,6 +264,7 @@ function UserProvider(props: UserProviderProps) {
                 const nonce: any = res.data.nonce + '';
                 worldIdNonce = nonce
                 const domain = window.location.host
+                alert('step 1')
                 const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
                     nonce: nonce,
                     expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -271,7 +272,8 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                alert('generateMessageResult')
+                alert('step 2')
+                alert(generateMessageResult)
                 console.log('New token: ', authToken)
             } catch (e) {
                 console.error(e)
