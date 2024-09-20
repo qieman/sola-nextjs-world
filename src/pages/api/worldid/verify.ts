@@ -1,8 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next/dist/shared/lib/utils";
-import { MiniAppWalletAuthSuccessPayload, verifySiweMessage,  } from "@worldcoin/minikit-js";
+import {verifySiweMessage} from "@/libs/minikit";
 import {solanaLogin} from "@/service/solas";
 
-const MiniKitLib = require('@worldcoin/minikit-js')
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.info('nonce', nonce)
 
     try {
-        const validMessage = await MiniKitLib.verifySiweMessage(payload, nonce);
+        const validMessage = await verifySiweMessage(payload, nonce);
         const auth_token = solanaLogin({
             sol_address: payload.address,
             next_token: process.env.NEXT_TOKEN || '',
