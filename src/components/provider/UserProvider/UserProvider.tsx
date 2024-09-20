@@ -251,24 +251,20 @@ function UserProvider(props: UserProviderProps) {
         console.log('Login ...')
         console.log('Login type: ', 'world id')
 
-        showToast('1')
         if (!MiniKitLib.MiniKit.isInstalled()) {
             showToast('WorldID not installed', 3000)
             return
         }
 
-        showToast('2')
         let authToken = AuthStorage.getAuth(address)?.authToken
 
         if (!authToken) {
-            showToast('3')
             const unloading = showLoading()
             try {
                 const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
                 const nonce: any = res.data.nonce + '';
                 worldIdNonce = nonce
                 const domain = window.location.host
-                showToast('4')
                 const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
                     nonce: nonce,
                     expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -276,10 +272,8 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                showToast('5')
                 console.log('New token: ', authToken)
             } catch (e) {
-                showToast('6')
                 console.error(e)
                 showToast('Login fail', 3000)
                 logOut()
@@ -298,7 +292,6 @@ function UserProvider(props: UserProviderProps) {
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
                 showToast('WorldID login failed')
-                showToast('6')
                 throw new Error('WorldID login failed');
             } else {
                 try {
@@ -317,10 +310,8 @@ function UserProvider(props: UserProviderProps) {
                         throw new Error(response.data.message || "Authentication failed");
                     }
                 } catch (e: any) {
-                    showToast('8')
                     showToast(e.message)
                 }
-
             }
         });
 
