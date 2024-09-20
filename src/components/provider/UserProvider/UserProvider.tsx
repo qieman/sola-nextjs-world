@@ -251,20 +251,24 @@ function UserProvider(props: UserProviderProps) {
         console.log('Login ...')
         console.log('Login type: ', 'world id')
 
+        alert('step 1')
         if (!MiniKitLib.MiniKit.isInstalled()) {
             showToast('WorldID not installed', 3000)
             return
         }
 
+        alert('step 2')
         let authToken = AuthStorage.getAuth(address)?.authToken
+
         if (!authToken) {
+            alert('step 2')
             const unloading = showLoading()
             try {
                 const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
                 const nonce: any = res.data.nonce + '';
                 worldIdNonce = nonce
                 const domain = window.location.host
-                alert('step 1')
+                alert('step 3')
                 const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
                     nonce: nonce,
                     expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -272,15 +276,17 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                alert('step 2')
+                alert('step 4')
                 alert(generateMessageResult)
                 console.log('New token: ', authToken)
             } catch (e) {
+                alert('step 5')
                 console.error(e)
                 showToast('Login fail', 3000)
                 logOut()
                 return
             } finally {
+                alert('step 6')
                 unloading()
             }
         }
