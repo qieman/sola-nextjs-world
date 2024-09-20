@@ -276,7 +276,7 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                showToast(generateMessageResult)
+                showToast('5')
                 console.log('New token: ', authToken)
             } catch (e) {
                 showToast('6')
@@ -297,30 +297,36 @@ function UserProvider(props: UserProviderProps) {
 
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
-                alert('WorldID login failed')
                 showToast('WorldID login failed')
+                showToast('6')
                 throw new Error('WorldID login failed');
             } else {
-               console.log(payload)
-                const response: any = await fetch.post({
-                    url: "/api/worldid/verify",
-                    data: {payload, nonce: worldIdNonce}
-                });
+                try {
+                    console.log(payload)
+                    showToast('7')
+                    const response: any = await fetch.post({
+                        url: "/api/worldid/verify",
+                        data: {payload, nonce: worldIdNonce}
+                    });
 
-                if (response.status === 200) {
-                    const res = response.data
-                    await setProfile({authToken: res.auth_token})
-                    setAuth(res.address, res.auth_token)
-                } else {
-                    throw new Error("Authentication failed");
+                    if (response.status === 200) {
+                        const res = response.data
+                        await setProfile({authToken: res.auth_token})
+                        setAuth(res.address, res.auth_token)
+                    } else {
+                        throw new Error("Authentication failed");
+                    }
+                } catch (e: any) {
+                    showToast(e.message || '8')
                 }
+
             }
         });
 
         return () => {
             MiniKitLib.MiniKit.unsubscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth);
         };
-    }, []);
+    }, [setProfile, showToast]);
 
     const phoneLogin = async () => {
         const loginType = AuthStorage.getLastLoginType()
