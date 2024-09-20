@@ -251,14 +251,17 @@ function UserProvider(props: UserProviderProps) {
         console.log('Login ...')
         console.log('Login type: ', 'world id')
 
+        showToast('1')
         if (!MiniKitLib.MiniKit.isInstalled()) {
             showToast('WorldID not installed', 3000)
             return
         }
 
-        let authToken = AuthStorage.getAuth(address)?.authToken
+        let authToken = AuthStorage.getAuth()?.authToken
 
+        showToast('2')
         if (!authToken) {
+            showToast('3')
             const unloading = showLoading()
             try {
                 const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
@@ -272,8 +275,9 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                console.log('New token: ', authToken)
+                showToast('4')
             } catch (e) {
+                showToast('5')
                 console.error(e)
                 showToast('Login fail', 3000)
                 logOut()
@@ -286,14 +290,17 @@ function UserProvider(props: UserProviderProps) {
 
     useEffect(() => {
         if (!MiniKitLib.MiniKit.isInstalled()) {
+            showToast('6')
             return;
         }
 
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
+                showToast('7')
                 showToast('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
+                showToast('8')
                 const unload = showLoading()
                 try {
                     console.log(payload)
@@ -302,15 +309,20 @@ function UserProvider(props: UserProviderProps) {
                         data: {payload, nonce: worldIdNonce}
                     });
 
+                    showToast('9')
+
                     if (response.status === 200 && response.data.auth_token) {
                         const res = response.data
                         await setProfile({authToken: res.auth_token})
                         setAuth(res.address, res.auth_token)
+                        showToast('10')
                         unload()
                     } else {
+                        showToast('11')
                         throw new Error(response.data.message || "Authentication failed");
                     }
                 } catch (e: any) {
+                    showToast('12')
                     unload()
                     showToast(e.message)
                 }
