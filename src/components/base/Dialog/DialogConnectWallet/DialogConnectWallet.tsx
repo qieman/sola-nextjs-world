@@ -171,7 +171,7 @@ function DialogConnectWallet(props: DialogConnectWalletProps) {
             {
             <div className={`connect-item ${MiniKitLib.MiniKit.isInstalled() ? '' : 'disable'}`} onClick={minikitLogin}>
                 <img src="https://ik.imagekit.io/soladata/th7yl4e7_DnPjjT8n1" alt="World ID"/>
-                <div className='connect-name'>World ID</div>
+                <div className='connect-name'>World ID test</div>
             </div>
             }
 
