@@ -1,8 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next/dist/shared/lib/utils";
 import {verifySiweMessage} from "@/libs/minikit";
-import {solanaLogin} from "@/service/solas";
-
-
+import {wordIdLogin} from "@/service/solas";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const {payload, nonce} = req.body as {payload: any, nonce: string}
@@ -12,8 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const validMessage = await verifySiweMessage(payload, nonce);
-        const auth_token = solanaLogin({
-            sol_address: payload.address,
+        const auth_token = wordIdLogin({
+            address: payload.address,
             next_token: process.env.NEXT_TOKEN || '',
             host: req.headers.host || ''
         });

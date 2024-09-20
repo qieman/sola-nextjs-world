@@ -6677,3 +6677,20 @@ export async function queryMapEvent(props: QueryEventProps): Promise<Event[]> {
         }
     }) as Event[]
 }
+
+export async function wordIdLogin(props: {
+    address: string,
+    next_token: string,
+    host?: string
+}) {
+    const res: any = await fetch.post({
+        url: `${apiUrl}/profile/signin_with_world_id`,
+        data: {...props, app: props.host, address_source: 'world_id'}
+    })
+
+    if (res.data.result === 'error') {
+        throw new Error(res.data.message)
+    }
+
+    return res.data.auth_token as string
+}
