@@ -1,5 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next/dist/shared/lib/utils";
+// import { MiniAppWalletAuthSuccessPayload, verifySiweMessage } from "@worldcoin/minikit-js";
 import {solanaLogin} from "@/service/solas";
+
 const MiniKitLib = require('@worldcoin/minikit-js')
 
 
