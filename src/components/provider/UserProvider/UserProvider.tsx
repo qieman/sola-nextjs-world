@@ -309,12 +309,12 @@ function UserProvider(props: UserProviderProps) {
                         data: {payload, nonce: worldIdNonce}
                     });
 
-                    if (response.status === 200) {
+                    if (response.status === 200 && response.data.auth_token) {
                         const res = response.data
                         await setProfile({authToken: res.auth_token})
                         setAuth(res.address, res.auth_token)
                     } else {
-                        throw new Error("Authentication failed");
+                        throw new Error(response.data.message || "Authentication failed");
                     }
                 } catch (e: any) {
                     showToast('8')

@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Handle errors in validation or processing
         console.error(error);
         res.status(200).send({
+            message: error.message,
             address: null,
             auth_token: null
         });
