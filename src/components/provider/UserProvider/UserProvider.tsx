@@ -276,8 +276,7 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
-                showToast('5')
-                alert(generateMessageResult)
+                showToast(generateMessageResult)
                 console.log('New token: ', authToken)
             } catch (e) {
                 showToast('6')
@@ -286,7 +285,6 @@ function UserProvider(props: UserProviderProps) {
                 logOut()
                 return
             } finally {
-                showToast('7')
                 unloading()
             }
         }
@@ -300,6 +298,7 @@ function UserProvider(props: UserProviderProps) {
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
                 alert('WorldID login failed')
+                showToast('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
                console.log(payload)
