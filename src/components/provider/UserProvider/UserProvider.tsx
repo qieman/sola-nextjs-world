@@ -271,6 +271,7 @@ function UserProvider(props: UserProviderProps) {
                     statement:
                         `${domain} wants you to sign in with your World ID account:`,
                 });
+                alert('generateMessageResult')
                 console.log('New token: ', authToken)
             } catch (e) {
                 console.error(e)
