@@ -135,7 +135,7 @@ function UserProvider(props: UserProviderProps) {
 
         } catch (e: any) {
             console.error('[setProfile]: ', e)
-            showToast('Login fail: set profile', 3000)
+            showToast(e.message || 'Login fail: set profile', 3000)
             logOut()
         }
     }
