@@ -297,13 +297,12 @@ function UserProvider(props: UserProviderProps) {
                 const unload = showLoading()
                 showToast('8')
                 try {
-                    showToast(JSON.stringify(payload))
                     const response: any = await fetch.post({
                         url: "/api/worldid/verify",
                         data: {payload, nonce: worldIdNonce}
                     }, showToast);
 
-                    showToast('9')
+                    showToast(JSON.stringify(response.data))
 
                     if (response.status === 200 && response.data.auth_token) {
                         showToast(response.data.auth_token)
