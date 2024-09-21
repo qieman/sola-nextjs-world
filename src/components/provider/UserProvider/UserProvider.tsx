@@ -294,8 +294,8 @@ function UserProvider(props: UserProviderProps) {
                 showToast('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
-                showToast('8')
                 const unload = showLoading()
+                showToast('8')
                 try {
                     console.log(payload)
                     const response: any = await fetch.post({
