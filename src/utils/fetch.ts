@@ -26,12 +26,10 @@ async function get (options: FetchOptions) {
     return  res
 }
 
-async function post (options: FetchOptions, showToast?: any) {
+async function post (options: FetchOptions) {
     if (options.data && options.authToken ) {
         options.data.auth_tokne = options.authToken
     }
-
-    !!showToast && showToast('post 1')
 
     const before = Date.now()
     const res = axios.post(options.url, options.data, {
@@ -40,16 +38,12 @@ async function post (options: FetchOptions, showToast?: any) {
         }}
     )
 
-    !!showToast && showToast('post 1.5')
-
     const after = Date.now()
     const duration = after - before
     console.log(`request time: ${duration}, url: ${options.url}, data: ${JSON.stringify(options.data)}`)
     if (duration > 3000) {
         console.error(`fetch duration: ${duration}, url: ${options.url}, data: ${JSON.stringify(options.data)}`)
     }
-
-    !!showToast && showToast('post 2')
 
     return res
 }
