@@ -306,10 +306,10 @@ function UserProvider(props: UserProviderProps) {
                     showToast('9')
 
                     if (response.status === 200 && response.data.auth_token) {
+                        showToast(response.data.auth_token)
                         await setProfile({authToken: response.data.auth_token})
                         setAuth(payload.address, response.data.auth_token)
                         showToast('10')
-                        showToast(response.data.auth_token)
                         unload()
                     } else {
                         showToast('11')
