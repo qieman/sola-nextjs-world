@@ -284,7 +284,6 @@ function UserProvider(props: UserProviderProps) {
 
     useEffect(() => {
         if (!MiniKitLib.MiniKit.isInstalled()) {
-            showToast('6')
             return;
         }
 
@@ -304,16 +303,16 @@ function UserProvider(props: UserProviderProps) {
 
                     showToast(JSON.stringify(response.data))
 
-                    if (response.status === 200 && response.data.auth_token) {
-                        showToast(response.data.auth_token)
-                        await setProfile({authToken: response.data.auth_token})
-                        setAuth(payload.address, response.data.auth_token)
-                        showToast('10')
-                        unload()
-                    } else {
-                        showToast('11')
-                        throw new Error(response.data.message || "Authentication failed");
-                    }
+                    // if (response.status === 200 && response.data.auth_token) {
+                    //     showToast(response.data.auth_token)
+                    //     await setProfile({authToken: response.data.auth_token})
+                    //     setAuth(payload.address, response.data.auth_token)
+                    //     showToast('10')
+                    //     unload()
+                    // } else {
+                    //     showToast('11')
+                    //     throw new Error(response.data.message || "Authentication failed");
+                    // }
                 } catch (e: any) {
                     showToast('12')
                     unload()
