@@ -297,7 +297,7 @@ function UserProvider(props: UserProviderProps) {
                 const unload = showLoading()
                 showToast('8')
                 try {
-                    showToast('8.8')
+                    showToast(JSON.stringify(payload))
                     const response: any = await fetch.post({
                         url: "/api/worldid/verify",
                         data: {payload, nonce: worldIdNonce}
