@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const validMessage = await verifySiweMessage(payload, nonce);
-        const auth_token = wordIdLogin({
+        const auth_token = await wordIdLogin({
             address: payload.address,
             next_token: process.env.NEXT_TOKEN || '',
             host: req.headers.host || ''
