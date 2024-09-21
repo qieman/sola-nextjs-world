@@ -251,7 +251,6 @@ function UserProvider(props: UserProviderProps) {
         console.log('Login ...')
         console.log('Login type: ', 'world id')
 
-        showToast('1')
         if (!MiniKitLib.MiniKit.isInstalled()) {
             showToast('WorldID not installed', 3000)
             return
@@ -270,9 +269,7 @@ function UserProvider(props: UserProviderProps) {
                 statement:
                     `${domain} wants you to sign in with your World ID account:`,
             });
-            showToast('4')
         } catch (e) {
-            showToast('5')
             console.error(e)
             showToast('Login fail', 3000)
             logOut()
@@ -289,32 +286,25 @@ function UserProvider(props: UserProviderProps) {
 
         MiniKitLib.MiniKit.subscribe(MiniKitLib.ResponseEvent.MiniAppWalletAuth, async (payload:any) => {
             if (payload.status === "error") {
-                showToast('7')
                 showToast('WorldID login failed')
                 throw new Error('WorldID login failed');
             } else {
                 const unload = showLoading()
-                showToast('8')
                 try {
                     const response: any = await fetch.post({
                         url: "/api/worldid/verify",
                         data: {payload, nonce: worldIdNonce}
                     }, showToast);
 
-                    showToast(JSON.stringify(response.data.auth_token))
-
-                    // if (response.status === 200 && response.data.auth_token) {
-                    //     showToast(response.data.auth_token)
-                    //     await setProfile({authToken: response.data.auth_token})
-                    //     setAuth(payload.address, response.data.auth_token)
-                    //     showToast('10')
-                    //     unload()
-                    // } else {
-                    //     showToast('11')
-                    //     throw new Error(response.data.message || "Authentication failed");
-                    // }
+                    if (response.status === 200 && response.data.auth_token) {
+                        showToast(response.data.auth_token)
+                        await setProfile({authToken: response.data.auth_token})
+                        setAuth(payload.address, response.data.auth_token)
+                        unload()
+                    } else {
+                        throw new Error(response.data.message || "Authentication failed");
+                    }
                 } catch (e: any) {
-                    showToast('12')
                     unload()
                     showToast(e.message)
                 }
