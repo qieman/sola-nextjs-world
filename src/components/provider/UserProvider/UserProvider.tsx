@@ -301,7 +301,7 @@ function UserProvider(props: UserProviderProps) {
                     const response: any = await fetch.post({
                         url: "/api/worldid/verify",
                         data: {payload, nonce: worldIdNonce}
-                    });
+                    }, showToast);
 
                     showToast('9')
 
