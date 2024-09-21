@@ -301,7 +301,7 @@ function UserProvider(props: UserProviderProps) {
                         data: {payload, nonce: worldIdNonce}
                     }, showToast);
 
-                    showToast(response.data.auth_token)
+                    showToast(JSON.stringify(response.data.auth_token))
 
                     // if (response.status === 200 && response.data.auth_token) {
                     //     showToast(response.data.auth_token)
