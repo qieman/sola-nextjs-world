@@ -257,34 +257,28 @@ function UserProvider(props: UserProviderProps) {
             return
         }
 
-        let authToken = AuthStorage.getAuth()?.authToken
-
-        showToast('2')
-        if (!authToken) {
-            showToast('3')
-            const unloading = showLoading()
-            try {
-                const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
-                const nonce: any = res.data.nonce + '';
-                worldIdNonce = nonce
-                const domain = window.location.host
-                const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
-                    nonce: nonce,
-                    expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-                    notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-                    statement:
-                        `${domain} wants you to sign in with your World ID account:`,
-                });
-                showToast('4')
-            } catch (e) {
-                showToast('5')
-                console.error(e)
-                showToast('Login fail', 3000)
-                logOut()
-                return
-            } finally {
-                unloading()
-            }
+        const unloading = showLoading()
+        try {
+            const res = await fetch.get({url: `${process.env.NEXT_PUBLIC_API}/siwe/nonce`})
+            const nonce: any = res.data.nonce + '';
+            worldIdNonce = nonce
+            const domain = window.location.host
+            const generateMessageResult = MiniKitLib.MiniKit.commands.walletAuth({
+                nonce: nonce,
+                expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+                notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                statement:
+                    `${domain} wants you to sign in with your World ID account:`,
+            });
+            showToast('4')
+        } catch (e) {
+            showToast('5')
+            console.error(e)
+            showToast('Login fail', 3000)
+            logOut()
+            return
+        } finally {
+            unloading()
         }
     }
 
