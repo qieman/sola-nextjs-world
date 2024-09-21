@@ -297,7 +297,6 @@ function UserProvider(props: UserProviderProps) {
                     })
 
                     if (response.status === 200 && response.data.auth_token) {
-                        showToast(response.data.auth_token)
                         await setProfile({authToken: response.data.auth_token})
                         setAuth(payload.address, response.data.auth_token)
                         unload()
